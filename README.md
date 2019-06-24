@@ -23,6 +23,7 @@ subsequent steps.
 4. Use relion's manual picker (picking with start-end coordinates for helicies) to pick straight and undamaged regions of MTs.
 		
 5. Extract 4x binned particles from these coordinates in helical mode;
+		
 		Input Coordinates: *coords_suffix_manualpick.star file in manual pick job*
 		OR re-extract refined particles? No
 		Refined particles star file: N/A
@@ -58,7 +59,7 @@ PROTOFILAMENT NUMBER SORTING
 
 	
 8. Run supervised 3D class on binx4 segment averages to sort PF numbers. You will need 3D references in a directory for different PF numbers, and a star file with a list of these
-references and their paths (see example in âreferencesâ directory). No need for a reference mask as one iteration only;
+references and their paths (see example in 3D_references directory). No need for a reference mask as one iteration only;
 		
 		I/O tab:
 		
@@ -108,9 +109,10 @@ references and their paths (see example in âreferencesâ directory). No
 		Do local searches of symmetry: No
 		Additional arguments: --dont_check_norm
 		
-		N.B Fastest way run 3D classification with alignment is with GPU. Also see notes 5/6 in the âData Optimisationâ section below.
+		N.B Fastest way run 3D classification with alignment is with GPU. Also see notes 5/6 in the Data Optimisation section below.
 		
 9. Unify the 3D classes, so that the most common (mode) 3D class found for particles from a particular MT are assigned to the whole MT.
+
 		- Go to folder with the 3D classification iteration 1 results.
 		- Run the perl script to reformat the .star file for R; (e.g ./reformat.pl<./run_it001_data.star>./run_it001_data_corrected00.star)
 		- Type 'R' to start R (must have R available on the computer).
