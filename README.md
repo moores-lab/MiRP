@@ -553,8 +553,7 @@ script scale_helical_track_length_2.csh (MAKE SURE YOU RUN scale_helical_track_l
 	I/O tab:
 		
 	Input images STAR file: *binx1 output .star file with scaled helical track length created above* (NOT segment averages)
-	Reference map: *unbinned decorated synthetic reference of corresponding PF number OR rescaled output reconstruction from previous round* (see examples in
-	'references/high_resolution_refinement/' directory)
+	Reference map: *unbinned decorated synthetic reference of corresponding PF number OR rescaled output reconstruction from previous round*. Can resample a previously used reference onto a box of correct dimensions and pixel size using relion_image_handler
 	Reference mask: 1xbinned soft edged mask encapsulating all non-noise density created with MaskCreate to cover only the central 30% of the MT.
 		
 	Reference tab:
