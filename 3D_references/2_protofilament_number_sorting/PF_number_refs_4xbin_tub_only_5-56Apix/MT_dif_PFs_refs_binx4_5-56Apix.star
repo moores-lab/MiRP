@@ -1,0 +1,11 @@
+data_
+loop_
+_rlnReferenceImage
+PF_number_refs_4xbin_tub_only_5-56Apix/11pf_syn_ref_tubulin_only_6A_5-56Apix.mrc
+PF_number_refs_4xbin_tub_only_5-56Apix/12pf_syn_ref_tubulin_only_6A_5-56Apix.mrc
+PF_number_refs_4xbin_tub_only_5-56Apix/13pf_syn_ref_tubulin_only_6A_5-56Apix.mrc
+PF_number_refs_4xbin_tub_only_5-56Apix/14pf_syn_ref_tubulin_only_6A_5-56Apix.mrc
+PF_number_refs_4xbin_tub_only_5-56Apix/15pf_syn_ref_tubulin_only_6A_5-56Apix.mrc
+PF_number_refs_4xbin_tub_only_5-56Apix/16pf_syn_ref_tubulin_only_6A_5-56Apix.mrc
+
+ 
