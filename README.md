@@ -261,7 +261,7 @@ INITIAL SEAM ASSIGNMENT
 
 13. Unify PHI angles. 
 		- Go to the directory with the resulting iteration 1 star file.
-		- First load the right software: module load anaconda/v2-5.2.0 (or equivalent in your institution).
+		- This procedure uses a python script that depends on the scipy and matplotlib libraries - it may be easiest to install anaconda to run this script.
 		- RUN THE SCRIPT mirpy.py on ouput star file from 2nd 3Drefine iteration 1 (python mirpy.py -ang run_it001_data.star -id rlnAngleRot)
 		- Reset shifts to 0 and PSI/THETA angles to priors, keeping the unified PHI (ROT) angles using the script relion_keep_PHI_reset_angles_to_priors_and_shifts_to_0_relion3.csh (e.g source relion_keep_PHI_reset_angles_to_priors_and_shifts_to_0_relion3.csh fitted_angles.star).
 
@@ -331,8 +331,8 @@ X/Y SHIFT SMOOTHING
 15. Smooth XY shifts to remove overlapping boxes and keep individual boxes ~AU apart.
 
 - Go to the directory with the resulting iteration 1 star file from 3rd Refine3D.
-		- First load the right software: module load anaconda/v2-5.2.0 (or equivalent in your institution).
-		- RUN THE SCRIPT mirpy.py on ouput star file from 3rd 3Drefine iteration 1 (python mirpy.py -xy run_it001_data.star). Don't worry about the error messages they don't seem to be a problem. The resulting file will be called uniXY_data.star.
+		- This procedure uses a python script that depends on the scipy and matplotlib libraries - it may be easiest to install anaconda to run this script.
+		- RUN THE SCRIPT mirpy.py on ouput star file from 3rd 3Drefine iteration 1 (python mirpy.py -xy run_it001_data.star). There may be some verbose warnings, but they are not a problem. The resulting file will be called uniXY_data.star.
 		
 16. 4th Refine3D, get final shifts whilst keeping the PHI (Rot) fixed to the previous integer minimum;
 	
@@ -395,6 +395,7 @@ REFINED SEGMENT AVERAGES
 ------------------------------------------------------------------------------------------------------------------------
 
 17.	Rextract centered 4x binned particles from these coordinates in helical mode;
+
 		Input Coordinates: N/A (leave empty)
 		OR re-extract refined particles? YES
 		Refined particles star file: *your refined particle star file created in the last step*
@@ -523,83 +524,84 @@ HIGH RESOLUTION RECONSTRUCTION
 	  
 22.  Rextract centred seam corrected unbinned particles for final reconstruction in helical mode;
 
-		Input Coordinates: N/A (leave empty)
-		OR re-extract refined particles? YES
-		Refined particles star file: *your refined/seam corrected particle star file created in the last step*
-		Reset the refined offsets to 0? No
-		Re-center refined coordinates: Yes
-		Recenter on- X,Y,Z (pix): 0,0,0
-		Particle box size (pix) = ~600A (432 pixels if 1.39A/pixel)
-		Rescale particles? No
-		Re-scaled size (pixels): N/A
+
+	Input Coordinates: N/A (leave empty)
+	OR re-extract refined particles? YES
+	Refined particles star file: *your refined/seam corrected particle star file created in the last step*
+	Reset the refined offsets to 0? No
+	Re-center refined coordinates: Yes
+	Recenter on- X,Y,Z (pix): 0,0,0
+	Particle box size (pix) = ~600A (432 pixels if 1.39A/pixel)
+	Rescale particles? No
+	Re-scaled size (pixels): N/A
 		
-		Extract helical segments = yes
-		Tube Diameter (A) = 400
-		Use bimodal angular priors? yes
-		Coordinates are start end only? No
-		Cut helical tubes into segments? Yes
-		Number of asymmetrical units: 1
-		Helical rise (A): 82
-
-
+	Extract helical segments = yes
+	Tube Diameter (A) = 400
+	Use bimodal angular priors? yes
+	Coordinates are start end only? No
+	Cut helical tubes into segments? Yes
+	Number of asymmetrical units: 1
+	Helical rise (A): 82
+		
+		
 23. Scale helical track length; RELION at present does not scale helical track length column properly when changing particle binning.  Therefore you need to run the
 script scale_helical_track_length_2.csh (MAKE SURE YOU RUN scale_helical_track_length_2.csh AND NOT scale_helical_track_length.csh) on the new binx1 extracted particles.star file to scale the track length (source scale_helical_track_length_2.csh particles.star 4).
      
 	
 24.  5th Refine3D, FINAL fine local refinement. Can either run as a run with or without symmetry. With symmetry applied only the PF opposite the seam will be good;
 	
-		I/O tab:
+	I/O tab:
 		
-		Input images STAR file: *binx1 output .star file with scaled helical track length created above* (NOT segment averages)
-		Reference map: *unbinned decorated synthetic reference of corresponding PF number OR rescaled output reconstruction from previous round* (see examples in
-		'references/high_resolution_refinement/' directory)
-		Reference mask: 1xbinned soft edged mask encapsulating all non-noise density created with MaskCreate to cover only the central 30% of the MT.
+	Input images STAR file: *binx1 output .star file with scaled helical track length created above* (NOT segment averages)
+	Reference map: *unbinned decorated synthetic reference of corresponding PF number OR rescaled output reconstruction from previous round* (see examples in
+	'references/high_resolution_refinement/' directory)
+	Reference mask: 1xbinned soft edged mask encapsulating all non-noise density created with MaskCreate to cover only the central 30% of the MT.
 		
-		Reference tab:
+	Reference tab:
 		
-		Reference map is on absolute greyscale? No
-		Initial low pass filter (A): 0 (current references are already 15A low pass filtered- if your references are not already low pass filtered this can be set to ~12-15A)
-		Symmetry: C1
+	Reference map is on absolute greyscale? No
+	Initial low pass filter (A): 0 (current references are already 15A low pass filtered- if your references are not already low pass filtered this can be set to ~12-15A)
+	Symmetry: C1
 		
-		CTF tab:
-		
-		Do CTF-correction? Yes
-		Has reference been CTF-corrected? Yes
-		Have the data been phase flipped: No
-		Ignore CTFs until first peak: No
-		
-		Optimisation Tab:
-		
-		Mask diameter (A): 460 (REDUCED MASk SIZE TO FOCUS FINE ALIGNMENT ON CENTRAL REGION)
-		Mask individual particles with zeros? Yes
-		Use solvent-flatened FSCs? Yes
-		
-		Sampling tab:
-		
-		Angular sampling interval: 0.9 deg
-		Offset search range (pix): ~20A (less than monomer repeat distance to stop boxes jumping back into each other).
-		Offset search step (pix) 0.5
-		Local searches from auto-sampling: 0.9 deg (restricts to local alignment)
-		
-		Helix tab:
-		
-		Do helical reconstruction? Yes
-		Tube diameter - inner, outer (A): 120 400 (NOW AN INNER MASK AS YOU WILL BE GENERATING REAL DATA 3D REFS AT EACH ITERATION).
-		Angular search range - tilt, psi (deg): 2 2 (smaller search range as we are close enough from last refinement round).
-		Keep tilt-prior fixed: No
-		Range factor of local averaging: -1 (think this works slightly better at this stage as MTs are rather flexible)
-		Apply helical symmetry: No (CHANGE TO YES FOR SYMMETRIC RUN)
-		Number of asymmetrical units: 13 (i.e for 13pf kinesin-decorated reconstructions, 12 AUs for proteins that don't bind at the seam like DCX and CAMSAP)
-		Intial twist (deg). rise (A): -27.6689 9.46346 (*example is 13pf MT roughly, modify accordingly*)
-		Central Z length (%): 30
-		Do local searches of symmetry: No (CHANGE TO YES FOR SYMMETRIC RUN)
-		Twist search - Min,Max,Step (deg): -27 -28 0.1 (*example is 13pf MT roughly, modify accordingly*)
-	   	Rise search - Min,Max,Step (A): 9.4 9.7 0.1 (*example is 13pf MT roughly, modify accordingly*)
-		
-		Additional arguments: --dont_check_norm --sigma_rot 2 --ignore_helical_symmetry true (REMOVE --IGNORE HELICAL SYM ARGUMENT IF DOING SYMMETRIC RUN, IMPORTANT
-		THAT SIGMA ROT IS 2 or 3, RESTRAINS PHI ANGLES TO REMAIN IN INTEGER MINIMUM, also I think the option of 1 iteration does not work in auto-refine, so you will have to stop the job manually for the mo after iteration 1).
+	CTF tab:
 	
-		N.B Best to run this on GPUs, but as not a massive search range you could try multiple MPIs also (e.g 20 MPIs 1 Thread).
+	Do CTF-correction? Yes
+	Has reference been CTF-corrected? Yes
+	Have the data been phase flipped: No
+	Ignore CTFs until first peak: No
+		
+	Optimisation Tab:
+		
+	Mask diameter (A): 460 (REDUCED MASk SIZE TO FOCUS FINE ALIGNMENT ON CENTRAL REGION)
+	Mask individual particles with zeros? Yes
+	Use solvent-flatened FSCs? Yes
+		
+	Sampling tab:
+		
+	Angular sampling interval: 0.9 deg
+	Offset search range (pix): ~20A (less than monomer repeat distance to stop boxes jumping back into each other).
+	Offset search step (pix) 0.5
+	Local searches from auto-sampling: 0.9 deg (restricts to local alignment)
+		
+	Helix tab:
+		
+	Do helical reconstruction? Yes
+	Tube diameter - inner, outer (A): 120 400 (NOW AN INNER MASK AS YOU WILL BE GENERATING REAL DATA 3D REFS AT EACH ITERATION).
+	Angular search range - tilt, psi (deg): 2 2 (smaller search range as we are close enough from last refinement round).
+	Keep tilt-prior fixed: No
+	Range factor of local averaging: -1 (think this works slightly better at this stage as MTs are rather flexible)
+	Apply helical symmetry: No (CHANGE TO YES FOR SYMMETRIC RUN)
+	Number of asymmetrical units: 13 (i.e for 13pf kinesin-decorated reconstructions, 12 AUs for proteins that don't bind at the seam like DCX and CAMSAP)
+	Intial twist (deg). rise (A): -27.6689 9.46346 (*example is 13pf MT roughly, modify accordingly*)
+	Central Z length (%): 30
+	Do local searches of symmetry: No (CHANGE TO YES FOR SYMMETRIC RUN)
+	Twist search - Min,Max,Step (deg): -27 -28 0.1 (*example is 13pf MT roughly, modify accordingly*)
+	Rise search - Min,Max,Step (A): 9.4 9.7 0.1 (*example is 13pf MT roughly, modify accordingly*)
+		
+	Additional arguments: --dont_check_norm --sigma_rot 2 --ignore_helical_symmetry true (REMOVE --IGNORE HELICAL SYM ARGUMENT IF DOING SYMMETRIC RUN, IMPORTANT
+	THAT SIGMA ROT IS 2 or 3, RESTRAINS PHI ANGLES TO REMAIN IN INTEGER MINIMUM, also I think the option of 1 iteration does not work in auto-refine, so you will have to stop the job manually for the mo after iteration 1).
+	
+	N.B Best to run this on GPUs, but as not a massive search range you could try multiple MPIs also (e.g 20 MPIs 1 Thread).
 		
 ------------------------------------------------------------------------------------------------------------------------
 
