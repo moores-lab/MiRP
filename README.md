@@ -1,11 +1,8 @@
-# MiRP
-Microtubule Image Processing in RELION Pipeline
-
 #### INSTRUCTIONS FOR MiRP v2.2 PROCESSING OF MTS #### Joe Atherton/Alex Cook 2019 #
 
-N.B YOU WILL FIND ALL REQUIRED SCRIPTS IN THE APPROPRIATE FOLDERS AND EXAMPLE REFERENCES IN THE 3D_REFERENCES FOLDER.
+N.B YOU WILL FIND ALL REQUIRED SCRIPTS IN THE 'SCRIPTS' FOLDER AND EXAMPLE REFERENCES IN THE 'REFERENCES' FOLDER.
 
-ONLY TESTED USING RELION v3.0/BETA4 - MAY VARY WITH VERSION AS SENSITIVE TO COLUMN NUMBERS.
+ONLY TESTED USING RELION v3.0/BETA4- MAY VARY WITH VERSION AS SENSITIVE TO COLUMN NUMBERS.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -23,7 +20,7 @@ subsequent steps.
 4. Use relion's manual picker (picking with start-end coordinates for helicies) to pick straight and undamaged regions of MTs.
 		
 5. Extract 4x binned particles from these coordinates in helical mode;
-		
+
 		Input Coordinates: *coords_suffix_manualpick.star file in manual pick job*
 		OR re-extract refined particles? No
 		Refined particles star file: N/A
@@ -59,7 +56,7 @@ PROTOFILAMENT NUMBER SORTING
 
 	
 8. Run supervised 3D class on binx4 segment averages to sort PF numbers. You will need 3D references in a directory for different PF numbers, and a star file with a list of these
-references and their paths (see example in 3D_references directory). No need for a reference mask as one iteration only;
+references and their paths (see example in âreferencesâ directory). No need for a reference mask as one iteration only;
 		
 		I/O tab:
 		
@@ -109,7 +106,8 @@ references and their paths (see example in 3D_references directory). No need for
 		Do local searches of symmetry: No
 		Additional arguments: --dont_check_norm
 		
-		N.B Fastest way run 3D classification with alignment is with GPU. Also see notes 5/6 in the Data Optimisation section below.
+		
+N.B Fastest way run 3D classification with alignment is with GPU. Also see notes 5/6 in the âData Optimisationâ section below.
 		
 9. Unify the 3D classes, so that the most common (mode) 3D class found for particles from a particular MT are assigned to the whole MT.
 
@@ -261,9 +259,9 @@ INITIAL SEAM ASSIGNMENT
 
 13. Unify PHI angles. 
 		- Go to the directory with the resulting iteration 1 star file.
-		- This procedure uses a python script that depends on the scipy and matplotlib libraries - it may be easiest to install anaconda to run this script.
+		- First load the right software: module load anaconda/v2-5.2.0 (or equivalent in your institution).
 		- RUN THE SCRIPT mirpy.py on ouput star file from 2nd 3Drefine iteration 1 (python mirpy.py -ang run_it001_data.star -id rlnAngleRot)
-		- Reset shifts to 0 and PSI/THETA angles to priors, keeping the unified PHI (ROT) angles using the script relion_keep_PHI_reset_angles_to_priors_and_shifts_to_0_relion3.csh (e.g source relion_keep_PHI_reset_angles_to_priors_and_shifts_to_0_relion3.csh fitted_angles.star).
+		- Reset shifts to 0 and PSI/THETA angles to priors, keeping the unified PHI (ROT) angles using the script relion_keep_PHI_reset_angles_to_priors_and_shifts_to_0_relion3.csh (e.g source relion_keep_PHI_reset_angles_to_priors_and_shifts_to_0_relion3.csh smoothened_rlnAngleRot_data.star).
 
 The next step requires raw particles, not segment averages. Therefore copy the output star file above *.star to a new name *_NOT_SAs.star, then nedit the new .star file to have links to original particles rather than segment averages (can use replace funtion in
 nedit, find '_SAs.mrcs' and replace with '.mrcs'.
@@ -331,14 +329,14 @@ X/Y SHIFT SMOOTHING
 15. Smooth XY shifts to remove overlapping boxes and keep individual boxes ~AU apart.
 
 - Go to the directory with the resulting iteration 1 star file from 3rd Refine3D.
-		- This procedure uses a python script that depends on the scipy and matplotlib libraries - it may be easiest to install anaconda to run this script.
-		- RUN THE SCRIPT mirpy.py on ouput star file from 3rd 3Drefine iteration 1 (python mirpy.py -xy run_it001_data.star). There may be some verbose warnings, but they are not a problem. The resulting file will be called uniXY_data.star.
+		- First load the right software: module load anaconda/v2-5.2.0 (or equivalent in your institution).
+		- RUN THE SCRIPT mirpy.py on ouput star file from 3rd 3Drefine iteration 1 (python mirpy.py -xy run_it001_data.star). Don't worry about the error messages they don't seem to be a problem. The resulting file will be called smoothenedXY_data.star.
 		
 16. 4th Refine3D, get final shifts whilst keeping the PHI (Rot) fixed to the previous integer minimum;
 	
 		I/O tab:
 		
-		Input images STAR file: output .star file created above (uniXY_data.star) (NOT segment averages)*
+		Input images STAR file: output .star file created above (smoothenedXY_data.star) (NOT segment averages)*
 		Reference map: *4x binned decorated synthetic reference of corresponding PF number*
 		Reference mask: None
 		
@@ -419,7 +417,7 @@ N.B I've found the fastest way to run extraction jobs is through multiple MPI on
 18.	Make centered binnedx4 MT segment averages;
 
 	- Go to directory in the ./Extract/*micrographs* where there are new centered individual stacks (.mrcs) and corresponding extract.star files.
-	- Run the script divide_stacks_and_make_MT_segment_average_averages.csh (source divide_stacks_and_make_MT_segment_average_averages.csh)
+	- Run the script preprocess_segment_averages.csh (source preprocess_segment_averages.csh)
 	- Will need to now go back to segment averages for the coming 3D classification seam finding, so edit the extraction job particles.star file to have links to segment averages (_SAs.mrcs) rather than raw particles (.mrcs). You should not have to rescale helical track length as with the last extraction.
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -507,10 +505,8 @@ Examples can be found for 13pf and 14pf CKK only MTs in the directories 'seam_ch
 		  run_it001_data_unified_class.star.
 			
 21. Correct the seam location for each MT according to 3D class assignments.
-
 		- If you have a 13pf MT run the script 13pf_correct_unified_seam_classes_star_relionv3.csh on the star file created above (e.g source 13pf_correct_unified_seam_classes_star_relionv3.csh run_it001_data_unified_class.star 13 5.56  where
 		run_it001_data_unify_seam_class.star is the star file to be converted, 13 is the pf number and 5.56 is the binned pixel size). N.B IMPORTANT THAT THE MT HAS THE RIGHT POLARITY. IF YOU ARE USING A REFERENCE WITH OPPOSITE POLARITY TO THE EXAMPLE CAMSAP REFERENES USE THE SCRIPT 13pf_correct_unified_seam_classes_star_relionv3_REVERSED.csh INSTEAD.
-		
 		- If you have a 14pf MT run the script 14pf_correct_unified_seam_classes_star_relionv3.csh on the star file created above (e.g source 14pf_correct_unified_seam_classes_star_relionv3.csh run_it001_data_unified_class.star 14 5.56  where
 		run_it001_data_unify_seam_class.star is the star file to be converted, 14 is the pf number and 5.56 is the binned pixel size). N.B IMPORTANT THAT THE MT HAS THE RIGHT POLARITY. IF YOU ARE USING A REFERENCE WITH OPPOSITE POLARITY TO THE EXAMPLE CAMSAP REFERENES USE THE SCRIPT 14pf_correct_unified_seam_classes_star_relionv3_REVERSED.csh INSTEAD.
 		
@@ -523,7 +519,6 @@ HIGH RESOLUTION RECONSTRUCTION
 ------------------------------------------------------------------------------------------------------------------------	
 	  
 22.  Rextract centred seam corrected unbinned particles for final reconstruction in helical mode;
-
 
 	Input Coordinates: N/A (leave empty)
 	OR re-extract refined particles? YES
@@ -542,8 +537,8 @@ HIGH RESOLUTION RECONSTRUCTION
 	Cut helical tubes into segments? Yes
 	Number of asymmetrical units: 1
 	Helical rise (A): 82
-		
-		
+
+
 23. Scale helical track length; RELION at present does not scale helical track length column properly when changing particle binning.  Therefore you need to run the
 script scale_helical_track_length_2.csh (MAKE SURE YOU RUN scale_helical_track_length_2.csh AND NOT scale_helical_track_length.csh) on the new binx1 extracted particles.star file to scale the track length (source scale_helical_track_length_2.csh particles.star 4).
      
@@ -553,7 +548,8 @@ script scale_helical_track_length_2.csh (MAKE SURE YOU RUN scale_helical_track_l
 	I/O tab:
 		
 	Input images STAR file: *binx1 output .star file with scaled helical track length created above* (NOT segment averages)
-	Reference map: *unbinned decorated synthetic reference of corresponding PF number OR rescaled output reconstruction from previous round*. Can resample a previously used reference onto a box of correct dimensions and pixel size using relion_image_handler
+	Reference map: *unbinned decorated synthetic reference of corresponding PF number OR rescaled output reconstruction from previous round* (see examples in
+	'references/high_resolution_refinement/' directory)
 	Reference mask: 1xbinned soft edged mask encapsulating all non-noise density created with MaskCreate to cover only the central 30% of the MT.
 		
 	Reference tab:
@@ -563,7 +559,7 @@ script scale_helical_track_length_2.csh (MAKE SURE YOU RUN scale_helical_track_l
 	Symmetry: C1
 		
 	CTF tab:
-	
+		
 	Do CTF-correction? Yes
 	Has reference been CTF-corrected? Yes
 	Have the data been phase flipped: No
@@ -600,7 +596,7 @@ script scale_helical_track_length_2.csh (MAKE SURE YOU RUN scale_helical_track_l
 	Additional arguments: --dont_check_norm --sigma_rot 2 --ignore_helical_symmetry true (REMOVE --IGNORE HELICAL SYM ARGUMENT IF DOING SYMMETRIC RUN, IMPORTANT
 	THAT SIGMA ROT IS 2 or 3, RESTRAINS PHI ANGLES TO REMAIN IN INTEGER MINIMUM, also I think the option of 1 iteration does not work in auto-refine, so you will have to stop the job manually for the mo after iteration 1).
 	
-	N.B Best to run this on GPUs, but as not a massive search range you could try multiple MPIs also (e.g 20 MPIs 1 Thread).
+N.B Best to run this on GPUs, but as not a massive search range you could try multiple MPIs also (e.g 20 MPIs 1 Thread).
 		
 ------------------------------------------------------------------------------------------------------------------------
 
