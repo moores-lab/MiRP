@@ -429,7 +429,7 @@ if args.c:
         total = len(MT)
         cer.append( ( float(CLStop) / float(total) ) * 100 )
 
-    plt.hist(cer, bins = 'auto' )
+    plt.hist(cer, bins = 10 )
     plt.xlabel('Percent Confidence')
     plt.ylabel('Frequency')
     plt.show()
