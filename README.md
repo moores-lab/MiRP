@@ -56,7 +56,7 @@ PROTOFILAMENT NUMBER SORTING
 
 	
 8. Run supervised 3D class on binx4 segment averages to sort PF numbers. You will need 3D references in a directory for different PF numbers, and a star file with a list of these
-references and their paths (see example in âreferencesâ directory). No need for a reference mask as one iteration only;
+references and their paths (see example in ‘references’ directory). No need for a reference mask as one iteration only;
 		
 		I/O tab:
 		
@@ -106,8 +106,7 @@ references and their paths (see example in âreferencesâ directory). No
 		Do local searches of symmetry: No
 		Additional arguments: --dont_check_norm
 		
-		
-N.B Fastest way run 3D classification with alignment is with GPU. Also see notes 5/6 in the âData Optimisationâ section below.
+		N.B Fastest way run 3D classification with alignment is with GPU. Also see notes 5/6 in the ‘Data Optimisation’ section below.
 		
 9. Unify the 3D classes, so that the most common (mode) 3D class found for particles from a particular MT are assigned to the whole MT.
 
@@ -318,7 +317,7 @@ nedit, find '_SAs.mrcs' and replace with '.mrcs'.
 		Additional arguments: --dont_check_norm --iter 1  --sigma_rot 3 --ignore_helical_symmetry (IMPORTANT THAT SIGMA ROT IS 3, RESTRAINS PHI ANGLES TO REMAIN IN INTEGER
 		MINIMUM, also I think the option of 1 iteration does not work in auto-refine, so you will have to stop the job manually for the mo after iteration 1).
 	
-		N.B Best to run this on GPU but as not a massive search range; you could try multiple CPU MPIs also (e.g 20 MPIs 1 Thread). Also see note 5 in the âData Optimisationâ section below.	
+		N.B Best to run this on GPU but as not a massive search range; you could try multiple CPU MPIs also (e.g 20 MPIs 1 Thread). Also see note 5 in the ‘Data Optimisation’ section below.	
 		
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -479,7 +478,7 @@ Examples can be found for 13pf and 14pf CKK only MTs in the directories 'seam_ch
 		Do local searches of symmetry: No
 		Additional arguments: --dont_check_norm --ignore_helical_symmetry
 		
-		N.B Try 20 threads on a CPU machine. Also see notes 5/6 in the âData Optimisationâ section below.
+		N.B Try 20 threads on a CPU machine. Also see notes 5/6 in the ‘Data Optimisation’ section below.
 		
 20. Unify seam location for each MT. 
 	
@@ -505,9 +504,11 @@ Examples can be found for 13pf and 14pf CKK only MTs in the directories 'seam_ch
 		  run_it001_data_unified_class.star.
 			
 21. Correct the seam location for each MT according to 3D class assignments.
-		- If you have a 13pf MT run the script 13pf_correct_unified_seam_classes_star_relionv3.csh on the star file created above (e.g source 13pf_correct_unified_seam_classes_star_relionv3.csh run_it001_data_unified_class.star 13 5.56  where
+
+	- If you have a 13pf MT run the script 13pf_correct_unified_seam_classes_star_relionv3.csh on the star file created above (e.g source 13pf_correct_unified_seam_classes_star_relionv3.csh run_it001_data_unified_class.star 13 5.56  where
 		run_it001_data_unify_seam_class.star is the star file to be converted, 13 is the pf number and 5.56 is the binned pixel size). N.B IMPORTANT THAT THE MT HAS THE RIGHT POLARITY. IF YOU ARE USING A REFERENCE WITH OPPOSITE POLARITY TO THE EXAMPLE CAMSAP REFERENES USE THE SCRIPT 13pf_correct_unified_seam_classes_star_relionv3_REVERSED.csh INSTEAD.
-		- If you have a 14pf MT run the script 14pf_correct_unified_seam_classes_star_relionv3.csh on the star file created above (e.g source 14pf_correct_unified_seam_classes_star_relionv3.csh run_it001_data_unified_class.star 14 5.56  where
+		
+	- If you have a 14pf MT run the script 14pf_correct_unified_seam_classes_star_relionv3.csh on the star file created above (e.g source 14pf_correct_unified_seam_classes_star_relionv3.csh run_it001_data_unified_class.star 14 5.56  where
 		run_it001_data_unify_seam_class.star is the star file to be converted, 14 is the pf number and 5.56 is the binned pixel size). N.B IMPORTANT THAT THE MT HAS THE RIGHT POLARITY. IF YOU ARE USING A REFERENCE WITH OPPOSITE POLARITY TO THE EXAMPLE CAMSAP REFERENES USE THE SCRIPT 14pf_correct_unified_seam_classes_star_relionv3_REVERSED.csh INSTEAD.
 		
 
@@ -548,8 +549,7 @@ script scale_helical_track_length_2.csh (MAKE SURE YOU RUN scale_helical_track_l
 	I/O tab:
 		
 	Input images STAR file: *binx1 output .star file with scaled helical track length created above* (NOT segment averages)
-	Reference map: *unbinned decorated synthetic reference of corresponding PF number OR rescaled output reconstruction from previous round* (see examples in
-	'references/high_resolution_refinement/' directory)
+	Reference map: *unbinned decorated synthetic reference of corresponding PF number OR rescaled output reconstruction from previous round* (see examples in 'references/high_resolution_refinement/' directory)
 	Reference mask: 1xbinned soft edged mask encapsulating all non-noise density created with MaskCreate to cover only the central 30% of the MT.
 		
 	Reference tab:
@@ -593,10 +593,9 @@ script scale_helical_track_length_2.csh (MAKE SURE YOU RUN scale_helical_track_l
 	Twist search - Min,Max,Step (deg): -27 -28 0.1 (*example is 13pf MT roughly, modify accordingly*)
 	Rise search - Min,Max,Step (A): 9.4 9.7 0.1 (*example is 13pf MT roughly, modify accordingly*)
 		
-	Additional arguments: --dont_check_norm --sigma_rot 2 --ignore_helical_symmetry true (REMOVE --IGNORE HELICAL SYM ARGUMENT IF DOING SYMMETRIC RUN, IMPORTANT
-	THAT SIGMA ROT IS 2 or 3, RESTRAINS PHI ANGLES TO REMAIN IN INTEGER MINIMUM, also I think the option of 1 iteration does not work in auto-refine, so you will have to stop the job manually for the mo after iteration 1).
+	Additional arguments: --dont_check_norm --sigma_rot 2 --ignore_helical_symmetry true (REMOVE --IGNORE HELICAL SYM ARGUMENT IF DOING SYMMETRIC RUN, IMPORTANT THAT SIGMA ROT IS 2 or 3, RESTRAINS PHI ANGLES TO REMAIN IN INTEGER MINIMUM.
 	
-N.B Best to run this on GPUs, but as not a massive search range you could try multiple MPIs also (e.g 20 MPIs 1 Thread).
+	N.B Best to run this on GPUs, but as not a massive search range you could try multiple MPIs also (e.g 20 MPIs 1 Thread).
 		
 ------------------------------------------------------------------------------------------------------------------------
 
