@@ -13,7 +13,7 @@ set pixel_size=$3
 
 set helical_twist = `echo | awk '{print (360/"'$pf_number'")}'`
 echo 'helical twist =' $helical_twist
-set helical_rise = `echo | awk '{print ((3*-41)/"'$pf_number'")}'`
+set helical_rise = `echo | awk '{print ((3*41)/"'$pf_number'")}'`
 echo 'helical rise =' $helical_rise
 
 #####################################################
